@@ -16,7 +16,7 @@ This was developed as a bespoke file format for delivering the latest content me
 ## File Format Overview
 A SolidSharpFile is relatively straight forward. Indexing and content metadata are front loaded and parsed into memory upfront and remaining resident until the SharpFile is disposed.
 
-
+![alt text](https://raw.githubusercontent.com/jmcguirk/solidsharp/master/Docs/Filelayout.png "SharpFile Format Layout")
 
 ## Usage
 
@@ -75,16 +75,21 @@ Similarly, you can attach a byte[] to individual entries as they're added to the
 ## FAQ
 
  *1. What are the tradeoffs?*
+
  Generally speaking, you should aim to serve up your SolidFile as uncompressed. This is generally because you're selecting this format for a use case where decompression costs are prohibitively costly. However, this will mean a larger file size, both over the wire and on disk.
  
  *2. This is very similar to a WAD - Why didn't you just go with that?*
+
  While WADs do implement a Solid archive - it's somewhat of a poorly supported formated in C#. Additionally, I wanted to toss on some arbitrary metadata and tag-based indexing.
  
  *3. Why didn't you select a zero-compression zip?*
+
 This was offered as an initial suggestion - and while it has a lot of similar performance characteristics the need to traverse the entire file means a trade off in initialization speed.
  
  *4. Why didn't you go with SQLLite?*
+
  This was another strong contender - and supports a _lot_ of the use cases described here (namely complex queries and indexing). Ultimately I didn't want to pull in a larger-ish framework with unknown performance characteristics in. This should be a consideration for anyone looking at this project though :)
 
 *5.  Why aren't subsequent Gets() for the same file cached?*
+
 The expectation is that the Byte[]s returned from Gets() represent data that needs to be parsed and processed further - and that the application developer is responsible for caching this data. Caching the raw byte[] data would introduce complexity and likely additional memory overhead that wouldn't actually be used.
